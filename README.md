@@ -1,6 +1,5 @@
-1. Discuss your initial thoughts in details on how you will design this application? (2 points)
-2. Discuss what development methodology you will use and why? (2 points)
-3. Provide high level design / architecture of your solution that you are proposing? (6 points)
-4. IMPORTANT: list who did what within the group. TAs should be able to validate in GitHub, otherwise team members who didn't contribute will receive a ZERO.
- 
-NOTE: Include a separate file (may be a scan of hand drawn picture if you like, or a PDF, tiff, word document, etc.) which shows a UML diagram of your design.
+1. Provide link to GitHub repository for TAs to view the code? (1 point)
+2. Discuss if your design and development methodology has changed since assignment 1 and why? (1 point)
+3. List what front end technologies you are using and why. List who is responsible of doing what in your group? (2 points)
+4. Provide screen shots of your front end, each page? (5 points)
+5. IMPORTANT: list who did what within the group. TAs should be able to validate in GitHub, otherwise team members who didn't contribute will receive a ZERO.
