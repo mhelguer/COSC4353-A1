@@ -169,7 +169,15 @@ mysqli_close($link);
                     <tbody>
                         <tr>
                             <td>
-                                
+								<?php
+									foreach($_SESSION['all_orders'] as $item){
+										echo "Gallons: ", $item['gallons'], "\n", 
+										"Address: ", $item['address'], "\n", 
+										"Delivery Date: ", $item['delivery'], "\n", 
+										"Price per Gallon: ", $item['suggested'], "\n", 
+										"Total Price: $", $item['total'], "\n\n";
+									}
+								?>
                             </td>
                         </tr>
                     </tbody>
