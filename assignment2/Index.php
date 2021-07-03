@@ -18,17 +18,18 @@
 		<div class="container center">
 	      <div class="card z-depth-2">
 
-	      	<!--Display Card Image-->
-	        <div class="card-image">
-	          <img src="img/PM.png">
-	        </div>
-
-	        <!--Display Card Buttons-->
+	      	<!--Display Card Buttons-->
 	        <div class="card-action z-depth-0">
 	            <a href="login/login.php" class="btn-large brand">Log In</a>
 	            <a href="login/cregister.php" class="btn-large brand">Register</a>
 	        </div>
 
+	      	<!--Display Card Image-->
+	        <div class="card-image">
+	          <img src="img/Fuel.jpg">
+	        </div>
+
+	        
 	      </div>
 	  	</div>
 
