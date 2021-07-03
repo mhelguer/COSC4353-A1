@@ -23,7 +23,7 @@ require __DIR__ . "/../config/db_connect.php";
 $cname = $cusername = $cpassword = "";
 $query_err = "";
 
-print_r($_SESSION['all_orders']);
+
 /* NOT YET:
 $sql2 = "SELECT * FROM Customer_View_Self WHERE customer_ID = ?";
 if($stmt2 = mysqli_prepare($link, $sql2)){
@@ -162,7 +162,6 @@ mysqli_close($link);
             <nav class="brand">
                 <h4 class="brand"><b>Your Order History</b></h4>
             </nav>
-            <button data-target="edit" class="btn-small green modal-trigger right">Edit</button>
             
             <div class="card-content">
                 <table class="highlight">
@@ -188,54 +187,7 @@ mysqli_close($link);
     <br><br>
 
 
-    <div class="container center modal" id="edit" style="width: 30%;">
-
-    	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="white">
-          <!--Header Text-->
-            <h4 class="center brand-text"><b>Edit Account Details</b></h4>
-            <p class="center">Please adjust fields where changes are desired.</p>
-
-            <?php if(!empty($submit_err) || !empty($query_err) ): ?>
-                <span style="color: red;"><?php echo $submit_err;  ?></span>
-                <span style="color: red;"><?php echo $query_err;  ?></span>
-            <?php endif ?>
-
-            <div class="input-field left-align">
-            	<label>Name</label>
-                <span class="red-text"><?php echo $cname_err; ?></span>
-                <input type="text" name="cname" value="<?php echo $cname; ?>" placeholder="<?php echo $cname; ?>" data-length="45" id="input_text" maxlength="45">
-            </div>
-
-            <div class="input-field left-align">
-                <label>Representative Name</label>
-                <span class="red-text"><?php echo $rname_err; ?></span>
-                <input type="text" name="rname" value="<?php echo $rname; ?>" placeholder="<?php echo $rname; ?>" data-length="45" id="input_text" maxlength="45">
-            </div>
-
-            <div class="input-field left-align">
-                <label>Representative Email</label>
-                <span class="red-text"><?php echo $remail_err; ?></span>
-                <input type="text" name="remail" value="<?php echo $remail; ?>" placeholder="<?php echo $remail; ?>" data-length="45" id="input_text" maxlength="45">
-            </div>
-
-            <div class="input-field left-align">
-                <label>Username</label>
-                <span class="red-text"><?php echo $cusername_err; ?></span>
-                <input type="text" name="cusername" value="<?php echo $cusername; ?>" placeholder="<?php echo $cusername; ?>" data-length="45" id="input_text" maxlength="45">
-            </div>
-
-            <div class="input-field left-align">
-            	<label>Password</label>
-                <span class="red-text"><?php echo $cpassword_err; ?></span>
-                <input type="password" name="cpassword" value="<?php echo $cpassword; ?>" data-length="45" id="input_text" maxlength="45">
-            </div>
-
-            <div class="container">
-            	<label style="color: grey;"><?php echo $success;  ?></label><br>
-                <input type="submit" class="btn btn-primary brand waves-effect" value="Save Changes">
-            </div>
-      </form>
-    </div>
+    
 
 
 
