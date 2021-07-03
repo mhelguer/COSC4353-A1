@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     }
 
     // Check if Zipcode is invalid
-    if(empty(trim($_POST["zipcode"]) ) || !preg_match("/^.{5,9}$/", trim($_POST["zipcode"]) ) ){
+    if(empty(trim($_POST["zipcode"]) ) || !preg_match("/^\b\d{5}(?:-\d{4})?\b$/", trim($_POST["zipcode"]) ) ){
         $zipcode_err = "Please enter a valid Zipcode.";
     } 
     else{
@@ -179,7 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                         <option value="CO">Colorado</option>
                         <option value="CT">Connecticut</option>
                         <option value="DE">Delaware</option>
-                        <option value="DC">District Of Columbia</option>
+                        <option value="DC">District of Columbia</option>
                         <option value="FL">Florida</option>
                         <option value="GA">Georgia</option>
                         <option value="HI">Hawaii</option>
@@ -228,7 +228,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                  <div class="input-field left-align">
                     <label>Zipcode</label>
                     <span class="red-text"> <?php echo $zipcode_err; ?></span>
-                    <input id="input_text" type="text" name="zipcode" value="<?php echo $zipcode; ?>" placeholder="<?php echo $zipcode; ?>"data-length="9" maxlength="9"> 
+                    <input id="input_text" type="text" name="zipcode" value="<?php echo $zipcode; ?>" placeholder="<?php echo $zipcode; ?>"data-length="10" maxlength="10"> 
                 </div>
 
                             
