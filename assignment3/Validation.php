@@ -210,4 +210,11 @@ class Validation{
 
         return $flag;
     }
+
+    public function Calculate($gal) {    
+        // test if total cost calculation is correct    
+        $this->costpergal = 10.32;
+        $this->total = $this->costpergal * $gal;
+        return $this->total;
+    }
 }
