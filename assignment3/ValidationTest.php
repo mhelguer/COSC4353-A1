@@ -87,4 +87,11 @@ class BackendTest extends TestCase{
 
         $this->assertEquals(1, $result);
     }
+
+    public function testCalculate(){
+        $test = new App\Validation;
+        $result = $test->Calculate("10");
+
+        $this->assertEquals(103.2, $result);
+    }
 }
