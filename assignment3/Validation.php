@@ -4,217 +4,273 @@ namespace App;
 
 class Validation{
     
-    public function RegisterUsernameValidate($user) {
-        $flag = 0;        
-        // Check if Username is empty
-        if(empty($user) ){
-            //$this->user_err = "Please enter a Username.";
-        } 
-        // Check if Username is not following rules
-        elseif(!preg_match("/^\w{2,45}$/", $user) ){
-            //$this->user_err = "Please enter a valid Username.";
-        }
-        else{
-            $flag++;
-        }
-
-        return $flag;
+    public function RegisterUsernameEmptyValidate($user) {
+        return empty($user);       
     }
 
-    public function RegisterPasswordValidate($pass) {
-        $flag=0;    
+    public function RegisterUsernameRegexValidate($user) {
+        return preg_match("/^\w{2,45}$/", $user);        
+    }
 
+
+    public function RegisterPasswordEmptyValidate($pass) {     
         // Check if Password is empty
-        if(empty($pass) ){
-            //$this->pass_err = "Please enter a Password.";
-        } 
-        // Check if Password is not following rules
-        elseif(!preg_match("/^.{2,45}$/", $pass) ){
-            //$this->pass_err = "Please enter a valid Password.";
-        }
-        else{
-            $flag++;
-        }
+        return empty($pass);
+    }
+            
+    public function RegisterPasswordRegexValidate($pass) {     
+        // Check if Password follows rules
+        return preg_match("/^.{2,45}$/", $pass);
+    }                
 
-        return $flag;
+    
+
+    public function LoginUsernameEmptyValidate($user) {
+        return empty($user);       
     }
 
-    public function LoginUsernameValidate($user) {
-        $flag = 0;    
-        
-        // Check if Username is empty
-        if(empty($user) ){
-            //$this->user_err = "Please enter a Username.";
-        } 
-        // Check if Username is not following rules
-        elseif(!preg_match("/^\w{2,45}$/", $user) ){
-            //$this->user_err = "Please enter a valid Username.";
-        }
-        else{
-            $flag++;
-        }
-
-        return $flag;
-    }
-
-    public function LoginPasswordValidate($pass) {
-        $flag=0;
-        
-        // Check if Password is empty
-        if(empty($pass) ){
-            //$this->pass_err = "Please enter a Password.";
-        } 
-        // Check if Password is not following rules
-        elseif(!preg_match("/^.{2,45}$/", $pass) ){
-            //$this->pass_err = "Please enter a valid Password.";
-        }
-        else{
-            $flag++;
-        }
-
-        return $flag;
-    }
-
-    public function RegisterNameValidate($name) {
-        $flag = 0;
-
-        // Check if Name is empty
-        if(empty($name) ){
-            //$this->name_err = "Please enter a Name.";
-        } 
-        // Check if Name is not following rules
-        elseif(!preg_match("/^.{1,50}$/", $name) ){
-            //$this->name_err = "Please enter a valid Name.";
-        }
-        else{
-            $flag++;
-        }
-
-        return $flag;
-    }
-
-    public function RegisterAddressOneValidate($add1) {
-        $flag=0;
-        
-        // Check if Add1 is empty
-        if(empty($add1) ){
-            //$this->add1_err = "Please enter an Address.";
-        } 
-        // Check if Add1 is not following rules
-        elseif(!preg_match("/^.{1,100}$/", $add1) ){
-            //$this->add1_err = "Please enter a valid Address.";
-        }
-        else{
-            $flag++;
-        }
-
-        return $flag;
-    }
-
-    public function RegisterAddressTwoValidate($add2) {
-        $flag=0;
-        
-        // Check if Add2 is not following rules
-        if(!preg_match("/^.{0,100}$/", $add2) ){
-            //$this->add2_err = "Please enter a valid Secondary Address.";
-        }
-        else{
-            $flag++;
-        }
-
-        return $flag;
-    }
-
-    public function RegisterCityValidate($city) {
-        $flag=0;
-        
-        // Check if City is empty
-        if(empty($city) ){
-            //$this->city_err = "Please enter a City.";
-        } 
-        // Check if Name is not following rules
-        elseif(!preg_match("/^.{1,50}$/", $city) ){
-            //$this->city_err = "Please enter a valid City.";
-        }
-        else{
-            $flag++;
-        }
-
-        return $flag;
-    }
-
-    public function RegisterStateValidate($state) {
-        $flag=0;
-        
-        // Check if State is empty
-        if(empty($state) ){
-            //$this->state_err = "Please select a State.";
-        } 
-        // Check if State is not following rules
-        elseif(!preg_match("/^\w{2}$/", $state) ){
-            //$this->state_err = "Please enter a valid State.";
-        }
-        else{
-            $flag++;
-        }
-
-        return $flag;
-    }
-
-    public function RegisterZipcodeValidate($zip) {
-        $flag=0;
-        
-        // Check if Zip is empty
-        if(empty($zip) ){
-            //$this->zip_err = "Please enter a Zip.";
-        } 
-        // Check if Zip is not following rules
-        elseif(!preg_match("/^\b\d{5}(?:-\d{4})?\b$/", $zip) ){
-            //$this->zip_err = "Please enter a valid Zip.";
-        }
-        else{
-            $flag++;
-        }    
-
-        return $flag;
-    }
-
-    public function GallonsValidate($gallons) {
-        $flag=0;
-
-        if(empty($gallons)) {
-            //$this->gallons_err = "Please enter a gallon amount.";
-        }
-        elseif(!preg_match("/^\d+(?:\.\d{1,2})?$/", $gallons)) {
-            //$this->gallons_err = "Please enter a valid gallon amount.";
-        }
-        else{
-            $flag++;
-        }
-
-        return $flag;
+    public function LoginUsernameRegexValidate($user) {
+        return preg_match("/^\w{2,45}$/", $user);        
     }
     
-    public function DeliveryDateValidate($delivery) {
-        $flag=0;
 
-        if(empty($delivery)) {
-            //$this->delivery_err = "Please enter a delivery date.";
-        }
-        elseif(!preg_match("/^\d{4}\-\d{2}\-\d{2}$/", $delivery)) {
-            //$this->delivery_err = "Please enter a valid delivery date.";
-        }
-        else{
-            $flag++;
-        }
+    public function LoginPasswordEmptyValidate($pass) {     
+        // Check if Password is empty
+        return empty($pass);
+    }
+            
+    public function LoginPasswordRegexValidate($pass) {     
+        // Check if Password follows rules
+        return preg_match("/^.{2,45}$/", $pass);
+    }   
 
-        return $flag;
+    public function RegisterNameEmptyValidate($name) {    
+        // Check if Name is empty
+        return empty($name);
     }
 
-    public function Calculate($gal) {    
+    public function RegisterNameRegexValidate($name){
+        // Check if Name does not follow rules
+        return preg_match("/^.{1,50}$/", $name);    
+    }
+        
+
+    public function RegisterAddressOneEmptyValidate($add1) {
+        return empty($add1);
+    }
+
+    public function RegisterAddressOneRegexValidate($add1){
+        return preg_match("/^.{1,100}$/", $add1);
+    }
+            
+
+    public function RegisterAddressTwoRegexValidate($add2) {       
+        // Check if Add2 is not following rules
+        return preg_match("/^.{0,100}$/", $add2);            
+    }
+
+    public function RegisterCityEmptyValidate($city) {            
+        // Check if City is empty
+        return empty($city);        
+    } 
+    
+    public function RegisterCityRegexValidate($city) {            
+        // Check if City is not following rules
+        return preg_match("/^.{1,100}$/", $city);            
+    }
+
+    public function RegisterStateEmptyValidate($state) {            
+        // Check if State is empty
+        return empty($state);
+    }
+
+    public function RegisterStateRegexValidate($state) {            
+        return preg_match("/^\w{2}$/", $state);
+    }
+     
+
+    public function RegisterZipcodeEmptyValidate($zip) {
+        // Check if zip is empty
+        return empty($zip);
+    }
+
+    public function RegisterZipcodeRegexValidate($zip) {
+        // Check if zip is not following rules
+        return preg_match("/^\b\d{5}(?:-\d{4})?\b$/", $zip);
+    }
+        
+
+    public function GallonsEmptyValidate($gallons) {
+        return empty($gallons);
+    }
+    
+    public function GallonsRegexValidate($gal){
+        return preg_match("/^\d{1,10}$/", $gal);
+    }
+
+    public function DeliveryDateEmptyValidate($delivery) {
+        return empty($delivery);
+    }
+
+    public function DeliveryDateRegexValidate($delivery) {
+        return preg_match("/^\d{4}\-\d{2}\-\d{2}$/", $delivery);
+    }
+        
+
+    public function CalculateTotal($gal) {    
         // test if total cost calculation is correct    
         $this->costpergal = 10.32;
         $this->total = $this->costpergal * $gal;
         return $this->total;
     }
+
+    public function Connect($link){
+        return $link -> connect_errno;        
+    }
+
+    public function GetPassword($link, $user){
+        $sql = "SELECT Password FROM login WHERE Username = ?";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("s", $user);
+        $stmt->execute();
+        $stmt->store_result();
+
+        
+        $stmt->bind_result($password);
+        $stmt->fetch();   
+        return $password;                
+        
+    
+    }
+
+    public function GetAddresses($link, $user){
+        $sql = "SELECT address1, address2 FROM client_info WHERE Username = ?";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("s", $user );
+
+        $stmt->execute();
+        $stmt->store_result();        
+        // Store data in variable
+        $stmt->bind_result($addr1, $addr2);
+        $stmt->fetch();     
+        return [$addr1, $addr2];
+        
+        
+    
+    }
+
+    public function InsertClient($link, $user, $fullname, $addr1, $addr2, $city, $state, $zip){
+        
+        
+        $sql = "INSERT INTO client_info (Username, fullname, address1, address2, city, state, zipcode)
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("sssssss", $user , $fullname, $addr1 , $addr2, $city, $state, $zip);
+        
+        return $stmt->execute();
+    }
+    
+
+    public function Order($link, $user, $gal, $addr1, $date, $pricepergal, $total_due){
+        $sql = "INSERT INTO fuel_orders (User, gallons, delivery_address, delivery_date, pricepergal, total_due)
+                VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $link->prepare($sql);
+            $stmt->bind_param("sssssd", $user , $gal, $addr1 , $date, $pricepergal, $total_due);
+            
+            return $stmt->execute();
+            
+    }
+    public function UpdateAccType($link, $user){
+        $sql =  "UPDATE login SET Acc_Type = 1 WHERE Username = ?";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("s", $user );
+        
+        return $stmt->execute();
+    }
+    public function EditPasswordEmptyValidate($pass) {
+        return empty($pass);       
+    }
+
+    public function EditPasswordRegexValidate($pass) {
+        return preg_match("/^.{2,45}$/", $pass);
+
+    }
+
+    public function EditNameEmptyValidate($name){
+        return empty($name);
+    }
+
+    public function EditNameRegexValidate($name){
+        return preg_match("/^.{1,50}$/", $name);
+    }
+
+    public function EditAddressOneEmptyValidate($addr1){
+        return empty($addr1);
+    }
+
+    public function EditAddressOneRegexValidate($addr1){
+        return preg_match("/^.{1,100}$/", $addr1);
+    }
+
+    public function EditAddressTwoRegexValidate($addr2){
+        return preg_match("/^.{0,100}$/", $addr2);
+    }
+
+    public function EditCityEmptyValidate($city){
+        return empty($city);
+    }
+
+    public function EditCityRegexValidate($city){
+        return preg_match("/^.{1,100}$/", $city);
+    }
+    
+    public function EditStateEmptyValidate($state){
+        return empty($state);
+    }
+
+    public function EditStateRegexValidate($state){
+        return preg_match("/^\w{2}$/", $state);
+    }
+
+    public function EditZipcodeEmptyValidate($zip){
+        return empty($zip);
+    }
+
+    public function EditZipcodeRegexValidate($zip){
+        return preg_match("/^\b\d{5}(?:-\d{4})?\b$/", $zip);
+    }
+
+    public function EditSetPassword($link, $user, $pass){
+        $phash = password_hash($pass, PASSWORD_DEFAULT);
+        $sql =  "UPDATE login SET Password = ? WHERE Username = ?";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("ss", $phash, $user);
+
+        return $stmt->execute();
+    }
+
+    public function EditSetClientInfo($link, $name, $addr1, $addr2, $city, $state, $zip, $user){
+        $sql = "UPDATE client_info SET fullname = ?, address1 = ?, address2 = ?, city = ?, state = ?, zipcode = ? WHERE Username = ?";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("sssssss", $name, $addr1, $addr2, $city, $state, $zip, $user);
+
+        return $stmt->execute();
+    }
+
+    public function EditShowAccount($link){
+        $sql = "SELECT L.Password, C.fullname, C.address1, C.address2, C.city, C.state, C.zipcode FROM login L JOIN client_info C ON L.Username = C.Username";
+        $stmt = $link->prepare($sql);
+
+        return $stmt->execute();
+    }
+
+    public function ShowHistory($link, $user){
+        $sql = "SELECT gallons, delivery_address, delivery_date, pricepergal, total_due FROM fuel_orders WHERE User = ?";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("s", $user);
+
+        return $stmt->execute();
+    }
+
+    
 }
