@@ -75,8 +75,8 @@ class Validation{
     } 
     
     public function RegisterCityRegexValidate($city) {            
-        // Check if Name is not following rules
-        return preg_match("/^.{1,50}$/", $city);            
+        // Check if City is not following rules
+        return preg_match("/^.{1,100}$/", $city);            
     }
 
     public function RegisterStateEmptyValidate($state) {            
@@ -221,7 +221,7 @@ class Validation{
     }
 
     public function EditCityRegexValidate($city){
-        return preg_match("/^.{1,50}$/", $city);
+        return preg_match("/^.{1,100}$/", $city);
     }
     
     public function EditStateEmptyValidate($state){
