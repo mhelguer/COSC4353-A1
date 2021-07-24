@@ -219,8 +219,8 @@ class RegisterTwo{
         if(empty($city) ){
             $this->city_err = "Please enter a City.";
         } 
-        // Check if Name is not following rules
-        elseif(!preg_match("/^.{1,50}$/", $city) ){
+        // Check if City is not following rules
+        elseif(!preg_match("/^.{1,100}$/", $city) ){
             $this->city_err = "Please enter a valid City.";
         }
         else{
@@ -466,7 +466,7 @@ class Edit{
             $this->city_err = "Please enter a City.";
         } 
         // Check if Name is not following rules
-        elseif(!preg_match("/^.{1,50}$/", $city) ){
+        elseif(!preg_match("/^.{1,100}$/", $city) ){
             $this->city_err = "Please enter a valid City.";
         }
         else{
