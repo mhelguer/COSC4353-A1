@@ -52,33 +52,33 @@ class Login{
                 $stmt->store_result();
 
                 if($stmt->num_rows() == 1){
-					
-					// Store data in session variables
-					$stmt->bind_result($accType, $password);
-					$stmt->fetch();
-					
-					//verifies if the input password matches the hashed password
+                    
+                    // Store data in session variables
+                    $stmt->bind_result($accType, $password);
+                    $stmt->fetch();
+                    
+                    //verifies if the input password matches the hashed password
                     if (password_verify($p, $password)) {
-					
-						// Password is correct, so start a new session
-						session_start();
-						
-						//bind vars to session
-						$_SESSION["acc_type"] = $accType;
-						$_SESSION["loggedin"] = true;
-						$_SESSION["username"] = $u;
+                    
+                        // Password is correct, so start a new session
+                        session_start();
+                        
+                        //bind vars to session
+                        $_SESSION["acc_type"] = $accType;
+                        $_SESSION["loggedin"] = true;
+                        $_SESSION["username"] = $u;
 
-						// Redirect user to welcome page
-						header("location: ../Index.php"); 
-						
-					} else {
-						$this->login_err = "Invalid Username or Password";
-					}
-					
+                        // Redirect user to welcome page
+                        header("location: ../Index.php"); 
+                        
+                    } else {
+                        $this->login_err = "Invalid Username or Password";
+                    }
+                    
                 }else{
                     $this->login_err = "Invalid Username or Password";
                 }
-				
+                
             }
             $stmt->close();
             $link->close();
@@ -149,7 +149,7 @@ class Register{
         if( $this->Validate($u,$p) == 3  ){
             require __DIR__ . "/../config/db_connect.php";
 
-			$hash = password_hash($p, PASSWORD_DEFAULT);
+            $hash = password_hash($p, PASSWORD_DEFAULT);
             $sql = "INSERT INTO login (Username, Password) 
                 VALUES ( ?, ?)";
             $stmt = $link->prepare($sql);
@@ -417,13 +417,15 @@ class Edit{
     private function Validate($pass, $name, $add1, $add2, $city, $state, $zip){
         $flag = 0;
 
-        // Check if Password is empty
-        if(empty($pass) ){
-            $this->pass_err = "Please enter a Password.";
-        } 
-        // Check if Password is not following rules
-        elseif(!preg_match("/^.{2,45}$/", $pass) ){
-            $this->pass_err = "Please enter a valid Password.";
+        // Check if Password is inputted
+        if(!empty($pass) ){                    
+            // Check if Password is not following rules
+            if(!preg_match("/^.{2,45}$/", $pass) ){
+                $this->pass_err = "Please enter a valid Password.";
+            }
+            else{
+                $flag++;
+            }
         }
         else{
             $flag++;
@@ -513,18 +515,21 @@ class Edit{
         if( $this->Validate($pass, $name, $add1, $add2, $city, $state, $zip) == 7 ){
             require __DIR__ . "/../config/db_connect.php";
 
-			$phash = password_hash($pass, PASSWORD_DEFAULT);
-            $sql = "UPDATE login SET Password = ? WHERE Username = ?";
-            $stmt = $link->prepare($sql);
-            $stmt->bind_param("ss", $phash, $_SESSION["username"]);
+            if( !empty($pass)){
+                $phash = password_hash($pass, PASSWORD_DEFAULT);
+                $sql = "UPDATE login SET Password = ? WHERE Username = ?";
+                $stmt = $link->prepare($sql);
+                $stmt->bind_param("ss", $phash, $_SESSION["username"]);
 
-            if($stmt->execute() ){
-                $this->success = "Saved changes.";
-            }else{
-                $this->register_err = "Error saving changes.";
+                if($stmt->execute() ){
+                    $this->success = "Saved changes.";
+                }else{
+                    $this->register_err = "Error saving changes.";
+                }
+
+                $stmt->close();
+                $link->close();
             }
-            $stmt->close();
-            $link->close();
 
 
             require __DIR__ . "/../config/db_connect.php";
@@ -544,8 +549,8 @@ class Edit{
 
     public function ShowAccount(){
         require __DIR__ . "/../config/db_connect.php";
-
-        $sql = "SELECT L.Password, C.fullname, C.address1, C.address2, C.city, C.state, C.zipcode FROM login L JOIN client_info C ON L.Username = C.Username";
+        
+        $sql = "SELECT fullname, address1, address2, city, state, zipcode FROM client_info";
         $stmt = $link->prepare($sql);
 
         if($stmt->execute() ){
