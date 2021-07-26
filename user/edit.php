@@ -50,7 +50,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <div class="input-field left-align">
                     <label>Password</label>
                     <span class="red-text"><?php echo $details->pass_err; ?></span>
-                    <input type="password" name="Pass" value="<?php echo $details->row["Password"]; ?>" placeholder="Password" id="input_text" data-length="45" maxlength="45"> 
+                    <input type="password" name="Pass" value="" placeholder="Password" id="input_text" data-length="45" maxlength="45"> 
                 </div>
 
                 <div class="input-field left-align">
