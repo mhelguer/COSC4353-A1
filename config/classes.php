@@ -371,7 +371,28 @@ class FuelForm{
         if($this->Validate( $gal, $date ) == 2){
             $this->costpergal = 10.32;
             $this->total = $this->costpergal * $gal;
+
+            //NEW: to make fuel order form and fuel_orders table use the updated address1 after editing account.
+            require __DIR__ . "/../config/db_connect.php";
+            $sql = "SELECT address1 FROM client_info WHERE Username = ?";
+            $stmt = $link->prepare($sql);
+            $stmt->bind_param("s", $_SESSION["username"] );
+
+            if($stmt->execute() ){
+                $stmt->store_result();
+
+                if($stmt->num_rows() == 1){             
+                    // Store data in variable
+                    $stmt->bind_result($addr1);
+                    $stmt->fetch();
+                    $_SESSION["address1"] = $addr1;
+                }
+            }
+            $stmt->close();
+            $link->close();
+            //end new
             return 1;
+
         }
         return 0;
     }
