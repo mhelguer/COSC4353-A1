@@ -304,11 +304,11 @@ class FuelForm{
     public $success;
     public $submission_err;
 
-    public function __construct($gal, $date, $int){
+    public function __construct($gal, $date, $state, $int){
         if($int == 1){
-            $this->Calculate($gal, $date);
+            $this->Calculate($gal, $date, $state);
         }elseif($int == 2){
-            $this->Order($gal, $date);
+            $this->Order($gal, $date, $state);
         }
     }
 
@@ -328,7 +328,7 @@ class FuelForm{
         }
 
         // Check if Address Exists
-        if(empty($_SESSION["address1"]) || !isset($_SESSION["address1"]) ){
+        if(1 ){
 
             require __DIR__ . "/../config/db_connect.php";
             $sql = "SELECT address1, address2 FROM client_info WHERE Username = ?";
@@ -367,38 +367,54 @@ class FuelForm{
         return $flag;
     }
 
-    public function Calculate($gal,$date){
+    //new: add $state as a parameter
+    public function Calculate($gal,$date, $state){
         if($this->Validate( $gal, $date ) == 2){
-            $this->costpergal = 10.32;
-            $this->total = $this->costpergal * $gal;
-
-            //NEW: to make fuel order form and fuel_orders table use the updated address1 after editing account.
-            require __DIR__ . "/../config/db_connect.php";
-            $sql = "SELECT address1 FROM client_info WHERE Username = ?";
-            $stmt = $link->prepare($sql);
-            $stmt->bind_param("s", $_SESSION["username"] );
-
-            if($stmt->execute() ){
-                $stmt->store_result();
-
-                if($stmt->num_rows() == 1){             
-                    // Store data in variable
-                    $stmt->bind_result($addr1);
-                    $stmt->fetch();
-                    $_SESSION["address1"] = $addr1;
-                }
-            }
-            $stmt->close();
-            $link->close();
-            //end new
+            
+            $this->total = $this->Pricing($gal, $state) * $gal;
             return 1;
-
         }
         return 0;
     }
 
-    public function Order($gal,$date){
-        if($this->Calculate($gal,$date) == 1){
+    //new: function to calculate suggested price/gal
+    public function Pricing($gal, $state){
+        $this->costpergal = 1.5;
+        // setting location factor
+        if($state == 'TX'){
+            $loc_factor=.02;
+        }
+        else{
+            $loc_factor=.04;
+        }
+
+        // setting rate history factor
+        $history = new FuelHistory();               
+        if ($history->ShowHistory() == false){
+            $rh_factor = 0;
+        }
+        else{
+            $rh_factor = .01;
+        }
+
+        // setting gallons requested factor
+        if ($gal >= 1000){
+            $gal_factor = .02;
+        }
+        else{
+            $gal_factor = .03;
+        }
+
+        $cp_factor = .1;
+
+        $margin = $this->costpergal*($loc_factor - $rh_factor + $gal_factor + $cp_factor);
+        $this->costpergal = $this->costpergal + $margin;
+        return $this->costpergal;
+    }
+
+    //new: add $state as a parameter
+    public function Order($gal,$date, $state){
+        if($this->Calculate($gal,$date, $state) == 1){
 
             require __DIR__ . "/../config/db_connect.php";
             $sql = "INSERT INTO fuel_orders (User, gallons, delivery_address, delivery_date, pricepergal, total_due)
@@ -595,7 +611,7 @@ class FuelHistory{
         $this->ShowHistory();
     }
 
-    private function ShowHistory(){
+    public function ShowHistory(){
         require __DIR__ . "/../config/db_connect.php";
 
         $sql = "SELECT gallons, delivery_address, delivery_date, pricepergal, total_due FROM fuel_orders WHERE User = ?";
@@ -605,17 +621,27 @@ class FuelHistory{
         if($stmt->execute() ){
             $result = $stmt->get_result();
             $this->rows = $result->fetch_all(MYSQLI_ASSOC);
-            
-            if(count($this->rows == 0)){
-                $this->show_err = "No history found.";
+            //new: if no history, this->rows has a value of false, so:
+            if($this->rows == false){
+                $this->show_err = "No history found.";      
+                return false;                       
             }
-        }else{
+            else{
+                /*if(count($this->rows == 0)){
+                    $this->show_err = "No history found.";
+                }*/
+                return true;
+            }
+        }
+        else{
             $this->show_err = "Error creating account.";
         }
+            
         $stmt->close();
         $link->close();
     }
 
 }
+
 
 ?>
