@@ -123,6 +123,29 @@ class Validation{
         $this->total = $this->costpergal * $gal;
         return $this->total;
     }
+	
+	
+	//pricing block
+	public function InState_Return_LocationFactor($state) {
+		return 0.02;
+	}
+	public function OutState_Return_LocationFactor($state) {
+		return 0.04;
+	}
+	
+	public function Has_FuelHistory_Return_Factor($bool) {
+		return 0.01;
+	}
+	public function No_FuelHistory_Return_Factor($bool) {
+		return 0;
+	}
+	
+	public function GallonsRequested_High_Return_Factor($gal) {
+		return 0.02;
+	}
+	public function GallonsRequested_Low_Return_Factor($gal) {
+		return 0.03;
+	}
 
     public function Connect($link){
         return $link -> connect_errno;        

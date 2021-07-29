@@ -174,6 +174,48 @@ class BackendTest extends TestCase{
 
         $this->assertEquals(103.2, $result);
     }
+	
+	
+	//pricing validation block
+	public function testInState_Return_LocationFactor() {
+		$test = new App\Validation;
+		$result = $test->InState_Return_LocationFactor('TX');
+		
+		$this->assertEquals(0.02, $result);
+	}
+	public function testOutState_Return_LocationFactor() {
+		$test = new App\Validation;
+		$result = $test->OutState_Return_LocationFactor('TX');
+		
+		$this->assertEquals(0.04, $result);
+	}
+	
+	public function testHas_FuelHistory_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->Has_FuelHistory_Return_Factor(true);
+		
+		$this->assertEquals(0.01, $result);
+	}
+	public function testNo_FuelHistory_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->No_FuelHistory_Return_Factor(false);
+		
+		$this->assertEquals(0, $result);
+	}
+	
+	public function testGallonsRequested_High_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->GallonsRequested_High_Return_Factor();
+		
+		$this->assertEquals(0.02, $result);
+	}
+	public function testGallonsRequested_Low_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->GallonsRequested_Low_Return_Factor(false);
+		
+		$this->assertEquals(0.03, $result);
+	}
+
 
     public function testConnect(){
         $test = new App\Validation;        
