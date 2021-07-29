@@ -174,48 +174,6 @@ class BackendTest extends TestCase{
 
         $this->assertEquals(103.2, $result);
     }
-	
-	
-	//pricing validation block
-	public function testInState_Return_LocationFactor() {
-		$test = new App\Validation;
-		$result = $test->InState_Return_LocationFactor('TX');
-		
-		$this->assertEquals(0.02, $result);
-	}
-	public function testOutState_Return_LocationFactor() {
-		$test = new App\Validation;
-		$result = $test->OutState_Return_LocationFactor('TX');
-		
-		$this->assertEquals(0.04, $result);
-	}
-	
-	public function testHas_FuelHistory_Return_Factor() {
-		$test = new App\Validation;
-		$result = $test->Has_FuelHistory_Return_Factor(true);
-		
-		$this->assertEquals(0.01, $result);
-	}
-	public function testNo_FuelHistory_Return_Factor() {
-		$test = new App\Validation;
-		$result = $test->No_FuelHistory_Return_Factor(false);
-		
-		$this->assertEquals(0, $result);
-	}
-	
-	public function testGallonsRequested_High_Return_Factor() {
-		$test = new App\Validation;
-		$result = $test->GallonsRequested_High_Return_Factor();
-		
-		$this->assertEquals(0.02, $result);
-	}
-	public function testGallonsRequested_Low_Return_Factor() {
-		$test = new App\Validation;
-		$result = $test->GallonsRequested_Low_Return_Factor(false);
-		
-		$this->assertEquals(0.03, $result);
-	}
-
 
     public function testConnect(){
         $test = new App\Validation;        
@@ -236,9 +194,9 @@ class BackendTest extends TestCase{
 		"fuelQuote_schema");
         
         $test = new App\Validation;
-        $result = $test->GetPassword($link, 'test1');
+        $result = $test->GetPassword($link, 'muser');
         $link->close();
-        $this->assertEquals('$2y$10$CyglAKa.VPGOIo4Pj3RxB.yW1.zvhXq32JlQvjC30Mlpv/dn16EwS', $result);
+        $this->assertEquals('$2y$10$4iTiWU.BdKEDbQzd7JJaKOs62MgjCjNc20t8OFLPx09VZJYBOJGD6', $result);
     }
 
     public function testGetAddresses(){
@@ -248,9 +206,9 @@ class BackendTest extends TestCase{
 		"fuelQuote_schema");
         
         $test = new App\Validation;
-        $result = $test->GetAddresses($link, 'test10');
+        $result = $test->GetAddresses($link, 'muser');
         $link->close();
-        $this->assertEquals(['Test Address 123', ''], $result);
+        $this->assertEquals(['maddr1', 'maddr2'], $result);
     }
 
     
@@ -262,7 +220,7 @@ class BackendTest extends TestCase{
         
         $test = new App\Validation;
 
-        $result = $test->InsertClient($link, 'test', 'Miguel Helguero', '12345 Oceanview Drive', '98765 Boone Rd', 'Houston', 'TX', '77450');
+        $result = $test->InsertClient($link, 'testuser1', 'test1name', 'test1addr1', 'test1addr2', 'Houston', 'TX', '77450');
         
         $this->assertEquals(true, $result);
     }
@@ -274,7 +232,7 @@ class BackendTest extends TestCase{
 		"fuelQuote_schema");
         
         $test = new App\Validation;
-        $result = $test->UpdateAccType($link, 'test');
+        $result = $test->UpdateAccType($link, 'mtest');
 
         $this->assertEquals(true, $result);
     }
@@ -287,7 +245,7 @@ class BackendTest extends TestCase{
         
         $test = new App\Validation;
 
-        $result = $test->Order($link, 'test10', 10, 'Test Address 123', "2021-07-23", 10.32, 103.2);
+        $result = $test->Order($link, 'muser', 10, '12345 Oceanview Drive', "2021-07-23", 10.32, 103.2);
 
         $this->assertEquals(true, $result);
     }
@@ -430,4 +388,45 @@ class BackendTest extends TestCase{
 
         $this->assertEquals(true, $result);
     }
+
+    //pricing validation block
+	public function testInState_Return_LocationFactor() {
+		$test = new App\Validation;
+		$result = $test->InState_Return_LocationFactor('TX');
+		
+		$this->assertEquals(0.02, $result);
+	}
+	public function testOutState_Return_LocationFactor() {
+		$test = new App\Validation;
+		$result = $test->OutState_Return_LocationFactor('TX');
+		
+		$this->assertEquals(0.04, $result);
+	}
+	
+	public function testHas_FuelHistory_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->Has_FuelHistory_Return_Factor(true);
+		
+		$this->assertEquals(0.01, $result);
+	}
+	public function testNo_FuelHistory_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->No_FuelHistory_Return_Factor(false);
+		
+		$this->assertEquals(0, $result);
+	}
+	
+	public function testGallonsRequested_High_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->GallonsRequested_High_Return_Factor(1000);
+		
+		$this->assertEquals(0.02, $result);
+	}
+	public function testGallonsRequested_Low_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->GallonsRequested_Low_Return_Factor(1);
+		
+		$this->assertEquals(0.03, $result);
+	}
+
 }
