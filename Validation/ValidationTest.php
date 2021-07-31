@@ -3,36 +3,6 @@
 use PHPUnit\Framework\TestCase;
 
 class BackendTest extends TestCase{
-    public function testRegisterUsernameEmptyValidate(){        
-        $test = new App\Validation;
-        $result = $test->RegisterUsernameEmptyValidate('Test');
-        
-        $this->assertEquals(false, $result);
-    }
-
-    public function testRegisterUsernameRegexValidate(){        
-        $test = new App\Validation;
-        $result = $test->RegisterUsernameRegexValidate('Test');
-        
-        $this->assertEquals(1, $result);
-    }
-
-    public function testRegisterPasswordEmptyValidate(){
-        $test = new App\Validation;
-        $result = $test->RegisterPasswordEmptyValidate('test');                    
-        
-        $this->assertEquals(false, $result);
-    }
-
-    public function testRegisterPasswordRegexValidate(){
-        $test = new App\Validation;
-        $result = $test->RegisterPasswordRegexValidate('test');                    
-        
-        $this->assertEquals(1, $result);
-    }
-
-    
-
     public function testLoginUsernameEmptyValidate(){        
         $test = new App\Validation;
         $result = $test->LoginUsernameEmptyValidate('Test');
@@ -59,6 +29,70 @@ class BackendTest extends TestCase{
         $result = $test->LoginPasswordRegexValidate('test');
         
         $this->assertEquals(1, $result);
+    }
+
+    public function testLoginAttempt(){        
+        $link = new mysqli("database-4353.ctkzz4wlfaku.us-east-2.rds.amazonaws.com",
+		"admin",
+		"COSC4353",
+		"fuelQuote_schema");
+        
+        $test = new App\Validation;
+        $result = $test->LoginAttempt($link, 'muser', 'mpass');
+        $link->close();        
+        $this->assertEquals(true, $result);
+    }
+
+    public function testRegisterUsernameEmptyValidate(){        
+        $test = new App\Validation;
+        $result = $test->RegisterUsernameEmptyValidate('regattemptU');
+        
+        $this->assertEquals(false, $result);
+    }
+
+    public function testRegisterUsernameRegexValidate(){        
+        $test = new App\Validation;
+        $result = $test->RegisterUsernameRegexValidate('regattemptU');
+        
+        $this->assertEquals(1, $result);
+    }
+
+    public function testRegisterPasswordEmptyValidate(){
+        $test = new App\Validation;
+        $result = $test->RegisterPasswordEmptyValidate('regattemptP');                    
+        
+        $this->assertEquals(false, $result);
+    }
+
+    public function testRegisterPasswordRegexValidate(){
+        $test = new App\Validation;
+        $result = $test->RegisterPasswordRegexValidate('regattemptP');                    
+        
+        $this->assertEquals(1, $result);
+    }
+
+    public function testRegisterUsernameTakenValidate(){
+        $link = new mysqli("database-4353.ctkzz4wlfaku.us-east-2.rds.amazonaws.com",
+		"admin",
+		"COSC4353",
+		"fuelQuote_schema");
+        
+        $test = new App\Validation;
+        $result = $test->RegisterUsernameTakenValidate($link, 'regattemptU');
+        $link->close();        
+        $this->assertEquals(true, $result);
+    }
+
+    public function testRegisterAttempt(){
+        $link = new mysqli("database-4353.ctkzz4wlfaku.us-east-2.rds.amazonaws.com",
+		"admin",
+		"COSC4353",
+		"fuelQuote_schema");
+        
+        $test = new App\Validation;
+        $result = $test->RegisterAttempt($link, 'regattemptU', 'regattemptP');
+        $link->close();        
+        $this->assertEquals(true, $result);
     }
 
     public function testRegisterNameEmptyValidate()
@@ -140,41 +174,6 @@ class BackendTest extends TestCase{
         $this->assertEquals(1, $result);
     }
 
-    public function testGallonsEmptyValidate(){
-        $test = new App\Validation;
-        $result = $test->GallonsEmptyValidate("400.55");
-
-        $this->assertEquals(false, $result);
-    }
-
-    public function testGallonsRegexValidate(){        
-        $test = new App\Validation;
-        $result = $test->GallonsRegexValidate(10);
-        $this->assertEquals(true, $result);
-    }
-
-    public function testDeliveryDateEmptyValidate(){
-        $test = new App\Validation;
-        $result = $test->DeliveryDateEmptyValidate("2021-08-16");
-
-        $this->assertEquals(false, $result);
-    }
-
-
-    public function testDeliveryDateRegexValidate(){
-        $test = new App\Validation;
-        $result = $test->DeliveryDateRegexValidate("2021-08-16");
-
-        $this->assertEquals(1, $result);
-    }
-
-    public function testCalculateTotal(){
-        $test = new App\Validation;
-        $result = $test->CalculateTotal("10");
-
-        $this->assertEquals(103.2, $result);
-    }
-
     public function testConnect(){
         $test = new App\Validation;        
         $link = new mysqli("database-4353.ctkzz4wlfaku.us-east-2.rds.amazonaws.com",
@@ -199,20 +198,7 @@ class BackendTest extends TestCase{
         $this->assertEquals('$2y$10$4iTiWU.BdKEDbQzd7JJaKOs62MgjCjNc20t8OFLPx09VZJYBOJGD6', $result);
     }
 
-    public function testGetAddresses(){
-        $link = new mysqli("database-4353.ctkzz4wlfaku.us-east-2.rds.amazonaws.com",
-		"admin",
-		"COSC4353",
-		"fuelQuote_schema");
-        
-        $test = new App\Validation;
-        $result = $test->GetAddresses($link, 'muser');
-        $link->close();
-        $this->assertEquals(['maddr1', 'maddr2'], $result);
-    }
-
-    
-    public function testInsertClient(){
+    public function testRegisterTwoAttempt(){
         $link = new mysqli("database-4353.ctkzz4wlfaku.us-east-2.rds.amazonaws.com",
 		"admin",
 		"COSC4353",
@@ -220,7 +206,7 @@ class BackendTest extends TestCase{
         
         $test = new App\Validation;
 
-        $result = $test->InsertClient($link, 'testuser1', 'test1name', 'test1addr1', 'test1addr2', 'Houston', 'TX', '77450');
+        $result = $test->RegisterTwoAttempt($link, 'testuser1', 'test1name', 'test1addr1', 'test1addr2', 'Houston', 'TX', '77450');
         
         $this->assertEquals(true, $result);
     }
@@ -236,6 +222,87 @@ class BackendTest extends TestCase{
 
         $this->assertEquals(true, $result);
     }
+
+    // Fuelform tests
+    public function testGallonsEmptyValidate(){
+        $test = new App\Validation;
+        $result = $test->GallonsEmptyValidate("400.55");
+
+        $this->assertEquals(false, $result);
+    }
+
+    public function testGallonsRegexValidate(){        
+        $test = new App\Validation;
+        $result = $test->GallonsRegexValidate(10);
+        $this->assertEquals(true, $result);
+    }
+
+    public function testGetAddresses(){
+        $link = new mysqli("database-4353.ctkzz4wlfaku.us-east-2.rds.amazonaws.com",
+		"admin",
+		"COSC4353",
+		"fuelQuote_schema");
+        
+        $test = new App\Validation;
+        $result = $test->GetAddresses($link, 'getAddrU');
+        $link->close();
+        $this->assertEquals(['getaddr1', 'getaddr2'], $result);
+    }  
+
+    public function testDeliveryDateEmptyValidate(){
+        $test = new App\Validation;
+        $result = $test->DeliveryDateEmptyValidate("2021-08-16");
+
+        $this->assertEquals(false, $result);
+    }
+
+    public function testDeliveryDateRegexValidate(){
+        $test = new App\Validation;
+        $result = $test->DeliveryDateRegexValidate("2021-08-16");
+
+        $this->assertEquals(1, $result);
+    }
+
+    //pricing validation block
+	public function testInState_Return_LocationFactor() {
+		$test = new App\Validation;
+		$result = $test->InState_Return_LocationFactor('TX');
+		
+		$this->assertEquals(0.02, $result);
+	}
+    
+	public function testOutState_Return_LocationFactor() {
+		$test = new App\Validation;
+		$result = $test->OutState_Return_LocationFactor('TX');
+		
+		$this->assertEquals(0.04, $result);
+	}
+	
+	public function testHas_FuelHistory_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->Has_FuelHistory_Return_Factor(true);
+		
+		$this->assertEquals(0.01, $result);
+	}
+	public function testNo_FuelHistory_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->No_FuelHistory_Return_Factor(false);
+		
+		$this->assertEquals(0, $result);
+	}
+	
+	public function testGallonsRequested_High_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->GallonsRequested_High_Return_Factor(1000);
+		
+		$this->assertEquals(0.02, $result);
+	}
+	public function testGallonsRequested_Low_Return_Factor() {
+		$test = new App\Validation;
+		$result = $test->GallonsRequested_Low_Return_Factor(1);
+		
+		$this->assertEquals(0.03, $result);
+	}
 
     public function testOrder(){
         $link = new mysqli("database-4353.ctkzz4wlfaku.us-east-2.rds.amazonaws.com",
@@ -372,7 +439,7 @@ class BackendTest extends TestCase{
 		"fuelQuote_schema");
         
         $test = new App\Validation;
-        $result = $test->EditShowAccount($link);
+        $result = $test->EditShowAccount($link, 'muser');
 
         $this->assertEquals(true, $result);
     }
@@ -388,45 +455,4 @@ class BackendTest extends TestCase{
 
         $this->assertEquals(true, $result);
     }
-
-    //pricing validation block
-	public function testInState_Return_LocationFactor() {
-		$test = new App\Validation;
-		$result = $test->InState_Return_LocationFactor('TX');
-		
-		$this->assertEquals(0.02, $result);
-	}
-	public function testOutState_Return_LocationFactor() {
-		$test = new App\Validation;
-		$result = $test->OutState_Return_LocationFactor('TX');
-		
-		$this->assertEquals(0.04, $result);
-	}
-	
-	public function testHas_FuelHistory_Return_Factor() {
-		$test = new App\Validation;
-		$result = $test->Has_FuelHistory_Return_Factor(true);
-		
-		$this->assertEquals(0.01, $result);
-	}
-	public function testNo_FuelHistory_Return_Factor() {
-		$test = new App\Validation;
-		$result = $test->No_FuelHistory_Return_Factor(false);
-		
-		$this->assertEquals(0, $result);
-	}
-	
-	public function testGallonsRequested_High_Return_Factor() {
-		$test = new App\Validation;
-		$result = $test->GallonsRequested_High_Return_Factor(1000);
-		
-		$this->assertEquals(0.02, $result);
-	}
-	public function testGallonsRequested_Low_Return_Factor() {
-		$test = new App\Validation;
-		$result = $test->GallonsRequested_Low_Return_Factor(1);
-		
-		$this->assertEquals(0.03, $result);
-	}
-
 }

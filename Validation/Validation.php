@@ -3,6 +3,31 @@
 namespace App;
 
 class Validation{
+    public function LoginUsernameEmptyValidate($user) {
+        return empty($user);       
+    }
+
+    public function LoginUsernameRegexValidate($user) {
+        return preg_match("/^\w{2,45}$/", $user);        
+    }
+
+    public function LoginPasswordEmptyValidate($pass) {     
+        // Check if Password is empty
+        return empty($pass);
+    }
+            
+    public function LoginPasswordRegexValidate($pass) {     
+        // Check if Password follows rules
+        return preg_match("/^.{2,45}$/", $pass);
+    }   
+
+    public function LoginAttempt($link, $u, $p){
+        $sql = "SELECT Acc_Type, Password FROM login WHERE Username = ?";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("s", $u);            
+        
+        return $stmt->execute();
+    }
     
     public function RegisterUsernameEmptyValidate($user) {
         return empty($user);       
@@ -11,7 +36,6 @@ class Validation{
     public function RegisterUsernameRegexValidate($user) {
         return preg_match("/^\w{2,45}$/", $user);        
     }
-
 
     public function RegisterPasswordEmptyValidate($pass) {     
         // Check if Password is empty
@@ -23,26 +47,23 @@ class Validation{
         return preg_match("/^.{2,45}$/", $pass);
     }                
 
-    
+    public function RegisterUsernameTakenValidate($link, $user){
+        $sql = "SELECT * FROM login WHERE Username = ?";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("s", $user);
 
-    public function LoginUsernameEmptyValidate($user) {
-        return empty($user);       
+        return $stmt->execute();
     }
 
-    public function LoginUsernameRegexValidate($user) {
-        return preg_match("/^\w{2,45}$/", $user);        
-    }
-    
+    public function RegisterAttempt($link, $u, $p){
+        $hash = password_hash($p, PASSWORD_DEFAULT);
+        $sql = "INSERT INTO login (Username, Password) 
+            VALUES ( ?, ?)";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("ss", $u, $hash);
 
-    public function LoginPasswordEmptyValidate($pass) {     
-        // Check if Password is empty
-        return empty($pass);
+        return $stmt->execute();
     }
-            
-    public function LoginPasswordRegexValidate($pass) {     
-        // Check if Password follows rules
-        return preg_match("/^.{2,45}$/", $pass);
-    }   
 
     public function RegisterNameEmptyValidate($name) {    
         // Check if Name is empty
@@ -63,7 +84,6 @@ class Validation{
         return preg_match("/^.{1,100}$/", $add1);
     }
             
-
     public function RegisterAddressTwoRegexValidate($add2) {       
         // Check if Add2 is not following rules
         return preg_match("/^.{0,100}$/", $add2);            
@@ -87,7 +107,6 @@ class Validation{
     public function RegisterStateRegexValidate($state) {            
         return preg_match("/^\w{2}$/", $state);
     }
-     
 
     public function RegisterZipcodeEmptyValidate($zip) {
         // Check if zip is empty
@@ -98,54 +117,6 @@ class Validation{
         // Check if zip is not following rules
         return preg_match("/^\b\d{5}(?:-\d{4})?\b$/", $zip);
     }
-        
-
-    public function GallonsEmptyValidate($gallons) {
-        return empty($gallons);
-    }
-    
-    public function GallonsRegexValidate($gal){
-        return preg_match("/^\d{1,10}$/", $gal);
-    }
-
-    public function DeliveryDateEmptyValidate($delivery) {
-        return empty($delivery);
-    }
-
-    public function DeliveryDateRegexValidate($delivery) {
-        return preg_match("/^\d{4}\-\d{2}\-\d{2}$/", $delivery);
-    }
-        
-
-    public function CalculateTotal($gal) {    
-        // test if total cost calculation is correct    
-        $this->costpergal = 10.32;
-        $this->total = $this->costpergal * $gal;
-        return $this->total;
-    }
-	
-	
-	//pricing block
-	public function InState_Return_LocationFactor($state) {
-		return 0.02;
-	}
-	public function OutState_Return_LocationFactor($state) {
-		return 0.04;
-	}
-	
-	public function Has_FuelHistory_Return_Factor($bool) {
-		return 0.01;
-	}
-	public function No_FuelHistory_Return_Factor($bool) {
-		return 0;
-	}
-	
-	public function GallonsRequested_High_Return_Factor($gal) {
-		return 0.02;
-	}
-	public function GallonsRequested_Low_Return_Factor($gal) {
-		return 0.03;
-	}
 
     public function Connect($link){
         return $link -> connect_errno;        
@@ -165,6 +136,34 @@ class Validation{
         
     
     }
+    
+    public function RegisterTwoAttempt($link, $user, $fullname, $addr1, $addr2, $city, $state, $zip){
+        
+        
+        $sql = "INSERT INTO client_info (Username, fullname, address1, address2, city, state, zipcode)
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("sssssss", $user , $fullname, $addr1 , $addr2, $city, $state, $zip);
+        
+        return $stmt->execute();
+    }
+    
+    public function UpdateAccType($link, $user){
+        $sql =  "UPDATE login SET Acc_Type = 1 WHERE Username = ?";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("s", $user );
+        
+        return $stmt->execute();
+    }
+
+    // FuelForm tests
+    public function GallonsEmptyValidate($gallons) {
+        return empty($gallons);
+    }
+    
+    public function GallonsRegexValidate($gal){
+        return preg_match("/^\d{1,10}$/", $gal);
+    }
 
     public function GetAddresses($link, $user){
         $sql = "SELECT address1, address2 FROM client_info WHERE Username = ?";
@@ -177,39 +176,48 @@ class Validation{
         $stmt->bind_result($addr1, $addr2);
         $stmt->fetch();     
         return [$addr1, $addr2];
-        
-        
-    
     }
 
-    public function InsertClient($link, $user, $fullname, $addr1, $addr2, $city, $state, $zip){
-        
-        
-        $sql = "INSERT INTO client_info (Username, fullname, address1, address2, city, state, zipcode)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $link->prepare($sql);
-        $stmt->bind_param("sssssss", $user , $fullname, $addr1 , $addr2, $city, $state, $zip);
-        
-        return $stmt->execute();
+    public function DeliveryDateEmptyValidate($delivery) {
+        return empty($delivery);
     }
-    
+
+    public function DeliveryDateRegexValidate($delivery) {
+        return preg_match("/^\d{4}\-\d{2}\-\d{2}$/", $delivery);
+    }
+
+    //pricing block
+	public function InState_Return_LocationFactor($state) {
+		return 0.02;
+	}
+
+	public function OutState_Return_LocationFactor($state) {
+		return 0.04;
+	}
+
+	public function Has_FuelHistory_Return_Factor($bool) {
+		return 0.01;
+	}
+	public function No_FuelHistory_Return_Factor($bool) {
+		return 0;
+	}
+
+	public function GallonsRequested_High_Return_Factor($gal) {
+		return 0.02;
+	}
+	public function GallonsRequested_Low_Return_Factor($gal) {
+		return 0.03;
+	}
 
     public function Order($link, $user, $gal, $addr1, $date, $pricepergal, $total_due){
         $sql = "INSERT INTO fuel_orders (User, gallons, delivery_address, delivery_date, pricepergal, total_due)
-                VALUES (?, ?, ?, ?, ?, ?)";
-            $stmt = $link->prepare($sql);
-            $stmt->bind_param("sssssd", $user , $gal, $addr1 , $date, $pricepergal, $total_due);
-            
-            return $stmt->execute();
-            
-    }
-    public function UpdateAccType($link, $user){
-        $sql =  "UPDATE login SET Acc_Type = 1 WHERE Username = ?";
+            VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $link->prepare($sql);
-        $stmt->bind_param("s", $user );
-        
+        $stmt->bind_param("sssssd", $user , $gal, $addr1 , $date, $pricepergal, $total_due);
+            
         return $stmt->execute();
     }
+
     public function EditPasswordEmptyValidate($pass) {
         return empty($pass);       
     }
@@ -280,9 +288,10 @@ class Validation{
         return $stmt->execute();
     }
 
-    public function EditShowAccount($link){
-        $sql = "SELECT L.Password, C.fullname, C.address1, C.address2, C.city, C.state, C.zipcode FROM login L JOIN client_info C ON L.Username = C.Username";
+    public function EditShowAccount($link, $user){
+        $sql = "SELECT fullname, address1, address2, city, state, zipcode FROM client_info WHERE Username = ?";
         $stmt = $link->prepare($sql);
+        $stmt->bind_param("s", $user);
 
         return $stmt->execute();
     }
@@ -294,6 +303,4 @@ class Validation{
 
         return $stmt->execute();
     }
-
-    
 }
