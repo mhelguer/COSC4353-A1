@@ -396,7 +396,7 @@ class FuelForm{
         }
 
         // setting gallons requested factor
-        if ($gal >= 1000){
+        if ($gal > 1000){
             $gal_factor = .02;
         }
         else{
