@@ -304,11 +304,11 @@ class FuelForm{
     public $success;
     public $submission_err;
 
-    public function __construct($gal, $date, $state, $int){
+    public function __construct($gal, $date, $int){
         if($int == 1){
-            $this->Calculate($gal, $date, $state);
+            $this->Calculate($gal, $date);
         }elseif($int == 2){
-            $this->Order($gal, $date, $state);
+            $this->Order($gal, $date);
         }
     }
 
@@ -327,31 +327,29 @@ class FuelForm{
             $flag++;
         }
 
-        // Check if Address Exists
-        if(1 ){
+        require __DIR__ . "/../config/db_connect.php";
+        $sql = "SELECT address1, address2, state FROM client_info WHERE Username = ?";
+        $stmt = $link->prepare($sql);
+        $stmt->bind_param("s", $_SESSION["username"] );
 
-            require __DIR__ . "/../config/db_connect.php";
-            $sql = "SELECT address1, address2 FROM client_info WHERE Username = ?";
-            $stmt = $link->prepare($sql);
-            $stmt->bind_param("s", $_SESSION["username"] );
+        if($stmt->execute() ){
+            $stmt->store_result();
 
-            if($stmt->execute() ){
-                $stmt->store_result();
-
-                if($stmt->num_rows() == 1){             
-                    // Store data in variable
-                    $stmt->bind_result($addr1, $addr2);
-                    $stmt->fetch();
-                    $_SESSION["address1"] = $addr1;
-                    $_SESSION["address2"] = $addr2;
-                }else{
-                    $this->address_err = "No Address Found";
-                    $flag--;
-                }
+            if($stmt->num_rows() == 1){             
+                // Store data in variable
+                $stmt->bind_result($addr1, $addr2, $state);
+                $stmt->fetch();
+                $_SESSION["address1"] = $addr1;
+                $_SESSION["address2"] = $addr2;
+                $_SESSION["state"] = $state;
+            }else{
+                $this->address_err = "No Address Found";
+                $flag--;
             }
-            $stmt->close();
-            $link->close();
         }
+        $stmt->close();
+        $link->close();
+
 
         // Check if Date is empty
         if(empty($date) ){
@@ -368,20 +366,20 @@ class FuelForm{
     }
 
     //new: add $state as a parameter
-    public function Calculate($gal,$date, $state){
+    public function Calculate($gal,$date){
         if($this->Validate( $gal, $date ) == 2){
             
-            $this->total = $this->Pricing($gal, $state) * $gal;
+            $this->total = $this->Pricing($gal) * $gal;
             return 1;
         }
         return 0;
     }
 
     //new: function to calculate suggested price/gal
-    public function Pricing($gal, $state){
+    public function Pricing($gal){
         $this->costpergal = 1.5;
         // setting location factor
-        if($state == 'TX'){
+        if($_SESSION["state"] == 'TX'){
             $loc_factor=.02;
         }
         else{
@@ -413,8 +411,8 @@ class FuelForm{
     }
 
     //new: add $state as a parameter
-    public function Order($gal,$date, $state){
-        if($this->Calculate($gal,$date, $state) == 1){
+    public function Order($gal,$date){
+        if($this->Calculate($gal,$date) == 1){
 
             require __DIR__ . "/../config/db_connect.php";
             $sql = "INSERT INTO fuel_orders (User, gallons, delivery_address, delivery_date, pricepergal, total_due)
@@ -587,8 +585,9 @@ class Edit{
     public function ShowAccount(){
         require __DIR__ . "/../config/db_connect.php";
         
-        $sql = "SELECT fullname, address1, address2, city, state, zipcode FROM client_info";
+        $sql = "SELECT fullname, address1, address2, city, state, zipcode FROM client_info WHERE Username = ?";
         $stmt = $link->prepare($sql);
+        $stmt->bind_param("s", $_SESSION["username"]);
 
         if($stmt->execute() ){
             $result = $stmt->get_result();
@@ -622,14 +621,12 @@ class FuelHistory{
             $result = $stmt->get_result();
             $this->rows = $result->fetch_all(MYSQLI_ASSOC);
             //new: if no history, this->rows has a value of false, so:
-            if($this->rows == false){
+            if($result->num_rows == 0){
                 $this->show_err = "No history found.";      
                 return false;                       
             }
             else{
-                /*if(count($this->rows == 0)){
-                    $this->show_err = "No history found.";
-                }*/
+
                 return true;
             }
         }

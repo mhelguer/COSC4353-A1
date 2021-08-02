@@ -13,10 +13,11 @@ require_once __DIR__ . "/../config/classes.php";
 
 $details = new Edit();
 // Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["Save"]) ){
 
     $details->EditAccount($_POST["Pass"], $_POST["Name"], $_POST["Add1"], $_POST["Add2"], $_POST["City"], $_POST["State"], $_POST["Zip"] );
     $details->ShowAccount();
+    unset($_POST["Save"]);
 }
 
 ?>

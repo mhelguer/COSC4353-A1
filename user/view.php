@@ -17,19 +17,19 @@ if($_SESSION["acc_type"] == 1 && !empty($_POST["Gallons"]) && !empty($_POST["Dat
     $switch = "disabled";
 }
 
+$form = new FuelForm($_POST["Gallons"], $_POST["Date"], 1 );
+
 if($_SERVER["REQUEST_METHOD"] == "POST" && $_SESSION["acc_type"] == 1){
 
-    if(isset($_POST["Calculate"]) ){
-        $form = new FuelForm($_POST["Gallons"], $_POST["Date"], 1 );
-    }
 
-    elseif(isset($_POST["Place_Order"]) ){
+    if(isset($_POST["Place_Order"]) ){
         $form = new FuelForm($_POST["Gallons"], $_POST["Date"], 2 );
     }
     unset($_POST["Calculate"]);
     unset($_POST["Place_Order"]);
     
 }
+
 //--------------------------------------------------------------------------------------------------
 ?>
 
@@ -38,7 +38,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && $_SESSION["acc_type"] == 1){
     <!--Include Files-->
     <?php require_once __DIR__ . "/../ends/header_welcome.php"; ?>
     <?php require_once __DIR__ . "/../functions/time_hello.php"; ?>
-
+    
     <?php if($_SESSION["acc_type"] == 0): ?>
 
         <div class="container center">

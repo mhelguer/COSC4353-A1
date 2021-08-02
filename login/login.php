@@ -25,7 +25,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <?php require_once __DIR__ . "/../functions/time_hello.php"; ?>
 
     <div class="container center">
-
+        
         <!--Input Form -->
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="white z-depth-2" id="login_form">
 
